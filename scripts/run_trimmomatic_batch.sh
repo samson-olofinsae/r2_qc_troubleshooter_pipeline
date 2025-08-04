@@ -21,7 +21,7 @@ for SAMPLE in father mother proband; do
     R2="${INPUT_DIR}/${SAMPLE}_R2.fastq.gz"
 
     if [[ -f "$R1" && -f "$R2" ]]; then
-        echo "🔍 Found: $R1 and $R2"
+        echo " Found: $R1 and $R2"
 
         LOGFILE="${LOG_DIR}/${SAMPLE}_trimmomatic.log"
         R1_OUT="${OUTPUT_DIR}/${SAMPLE}_R1.trimmed.fastq.gz"
