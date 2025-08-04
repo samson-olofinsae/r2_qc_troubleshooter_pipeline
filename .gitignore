@@ -1,0 +1,30 @@
+# === Raw data and results (excluded from Git) ===
+inputs/
+results/
+
+# === Logs and temporary files ===
+*.log
+*.tmp
+*.swp
+
+# === Python cache ===
+__pycache__/
+*.pyc
+
+# === Jupyter cache ===
+.ipynb_checkpoints/
+
+# === Editor and system-specific files ===
+.DS_Store
+*.~lock.*
+Thumbs.db
+
+# Ignore reference file and index
+ref/
+
+# ignore other large files
+*.fastq.gz
+*.bam
+*.sam
+*.vcf
+*.bcf
