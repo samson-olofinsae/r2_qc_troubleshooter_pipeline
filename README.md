@@ -1,6 +1,6 @@
 # R2 QC Troubleshooter Pipeline
 
-A training pipeline designed to simulate real-world quality control (QC) troubleshooting during paired-end FASTQ trimming. This mini-project demonstrates how to debug adapter issues, handle batch processing, and automate reproducible workflows using bash scripting.
+A training pipeline designed to simulate real-world quality control (QC) troubleshooting during paired-end FASTQ trimming. This mini-project demonstrates how to debug adapter issues, handle batch processing, and automate reproducible workflows using Bash scripting. It also includes log parsing and a CSV summary report of trimming results.
 
 ---
 
@@ -13,9 +13,10 @@ A training pipeline designed to simulate real-world quality control (QC) trouble
 ├── resources/               # Adapter file (TruSeq3-PE.fa)
 ├── results/
 │   ├── trimmed/             # Output: Trimmed and unpaired FASTQ files
-│   └── qc_logs/             # Output: Trimmomatic logs for each sample
+│   ├── qc_logs/             # Output: Trimmomatic logs for each sample
+│   └── qc_summary.csv       # Output: Tabular summary of trimming stats
 ├── scripts/
-│   ├── run_trimmomatic_batch.sh   # Main trimming script
+│   ├── run_trimmomatic_batch.sh   # Main trimming + log summariser script
 │   └── download_fasta.sh          # Fetches hg19_chr8.fa from Dropbox
 └── .gitignore
 ```
@@ -64,33 +65,47 @@ Each sample will be processed with quality and adapter trimming. Logs and trimme
 
 ---
 
-##  Output & Logs
+##  Output Files
 
-Each sample produces:
-- `*.trimmed.fastq.gz` and `*.unpaired.fastq.gz` files in `results/trimmed/`
-- A detailed log file in `results/qc_logs/`
+For each sample, the pipeline generates:
 
-Each log includes:
-- Quality encoding detected
-- Adapter matching behavior
-- Read survival statistics (e.g., Both Surviving %, Dropped %, etc.)
+- `*.trimmed.fastq.gz` and `*.unpaired.fastq.gz` → `results/trimmed/`
+- Trimmomatic log files → `results/qc_logs/`
+- Summary CSV → `results/qc_summary.csv`
+
+### Example CSV Summary Output:
+
+| Sample  | Input Read Pairs | Both Surviving | Forward Only  | Reverse Only  | Dropped | Percent Removed |
+|---------|------------------|----------------|---------------|---------------|---------|------------------|
+|         |                  |                |               |               |         |                  |
 
 ---
 
+### Column Definitions:
+
+- **Sample**: Name of the sample (e.g., father, mother, proband)
+- **Input Read Pairs**: Total number of read pairs fed into Trimmomatic
+- **Both Surviving**: Read pairs that passed filtering together
+- **Forward Only / Reverse Only**: Single reads retained while mate was dropped
+- **Dropped**: Read pairs completely discarded
+- **Percent Removed**: Proportion of total input reads discarded (%)
+
 ##  Key Learning Outcomes
 
-By using this training repo, you’ll gain hands-on understanding of:
-- How Trimmomatic behaves when adapter files are missing or partial
-- How to spot misleading 'success' messages without full trimming
-- Log-based validation of QC outcomes
-- GitHub-safe pipeline design (i.e., excluding large files)
-- Script automation and reproducibility in bioinformatics
+This repo helps build hands-on understanding of:
+
+- How Trimmomatic behaves with missing or mismatched adapters
+- Interpreting QC log outputs effectively
+- Writing Bash wrappers with integrated logging and summaries
+- Generating clean CSV summaries for downstream QC evaluation
+- Designing GitHub-safe pipelines (no large binary files committed)
+- Enhancing reproducibility in bioinformatics scripting
 
 ---
 
 ##  Acknowledgements
 
-This repo is part of a structured training series maintained by [Samson Olofinsae](https://github.com/samson-olofinsae), designed for bioinformatics scientists practicing real-world debugging in pipeline development.
+This repo is part of a structured training series maintained by [Samson Olofinsae](https://github.com/samson-olofinsae), designed for bioinformatics scientists practicing real-world debugging and pipeline development.
 
 ---
 
