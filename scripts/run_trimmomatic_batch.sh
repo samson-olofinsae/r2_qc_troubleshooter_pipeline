@@ -14,7 +14,7 @@ SUMMARY_CSV="results/qc_summary.csv"
 
 mkdir -p "$OUTPUT_DIR" "$LOG_DIR"
 
-echo "📅 Trimmomatic batch started: $(date)"
+echo " Trimmomatic batch started: $(date)"
 
 # Write CSV header
 echo "Sample,Input Read Pairs,Both Surviving,Forward Only,Reverse Only,Dropped,Percent Removed" > "$SUMMARY_CSV"
@@ -24,7 +24,7 @@ for SAMPLE in father mother proband; do
     R2="${INPUT_DIR}/${SAMPLE}_R2.fastq.gz"
 
     if [[ -f "$R1" && -f "$R2" ]]; then
-        echo "🔍 Found: $R1 and $R2"
+        echo " Found: $R1 and $R2"
 
         LOGFILE="${LOG_DIR}/${SAMPLE}_trimmomatic.log"
         R1_OUT="${OUTPUT_DIR}/${SAMPLE}_R1.trimmed.fastq.gz"
@@ -40,7 +40,7 @@ for SAMPLE in father mother proband; do
             &> "$LOGFILE"
 
         if [[ $? -eq 0 ]]; then
-            echo "✅ Trimmed $SAMPLE"
+            echo " Trimmed $SAMPLE"
 
             # Parse trimming summary
             STATS_LINE=$(grep "Input Read Pairs:" "$LOGFILE")
@@ -55,16 +55,16 @@ for SAMPLE in father mother proband; do
             REMOVED_PCT=$(awk -v drop="$DROP" -v input="$INPUT" 'BEGIN {printf "%.2f", (drop/input)*100}')
 
             # Log to terminal
-            echo " 📊 $SAMPLE: $DROP reads dropped out of $INPUT total (${REMOVED_PCT}%)"
+            echo "  $SAMPLE: $DROP reads dropped out of $INPUT total (${REMOVED_PCT}%)"
 
             # Append to CSV
             echo "$SAMPLE,$INPUT,$BOTH,$FWD,$REV,$DROP,$REMOVED_PCT" >> "$SUMMARY_CSV"
         else
-            echo "❌ Error trimming $SAMPLE – check $LOGFILE"
+            echo " Error trimming $SAMPLE – check $LOGFILE"
         fi
     else
-        echo "⚠️ Skipping $SAMPLE – missing input files"
+        echo " Skipping $SAMPLE – missing input files"
     fi
 done
 
-echo "🏁 Trimming batch completed: $(date)"
+echo " Trimming batch completed: $(date)"
