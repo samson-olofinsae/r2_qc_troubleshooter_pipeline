@@ -1,6 +1,8 @@
 # R2 QC Troubleshooter Pipeline
 
-A training pipeline designed to simulate real-world quality control (QC) troubleshooting during paired-end FASTQ trimming. This mini-project demonstrates how to debug adapter issues, handle batch processing, and automate reproducible workflows using Bash scripting. It also includes log parsing and a CSV summary report of trimming results.
+A training pipeline designed to simulate real-world quality control (QC) troubleshooting during paired-end FASTQ trimming. 
+This project demonstrates how to debug adapter issues, handle batch processing, and automate reproducible workflows using Bash scripting. 
+It also includes log parsing and a CSV summary report of trimming results.
 
 ---
 
@@ -27,8 +29,8 @@ A training pipeline designed to simulate real-world quality control (QC) trouble
 
 - [Trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic) ≥ 0.39
 - Bash ≥ 4.0
-- awk (gawk recommended)
-- cURL (`curl`)
+- `awk` (gawk recommended)
+- `curl`
 - Linux/Unix-based operating system
 - (Optional) Java 8+ if using `trimmomatic.jar` directly
 
@@ -45,7 +47,8 @@ cd r2_qc_troubleshooter_pipeline
 
 ### 2. Download the Reference FASTA
 
-> GitHub doesn’t allow files >100MB, so the reference FASTA is not tracked in Git. You must download it manually using:
+> GitHub doesn’t allow files >100MB, so the reference FASTA is not tracked in Git. 
+> Download it manually using:
 
 ```bash
 bash scripts/download_fasta.sh
@@ -66,7 +69,7 @@ bash scripts/run_trimmomatic_batch.sh
 
 ---
 
-## Run the Pipeline
+## Running the Pipeline
 
 To batch-trim all FASTQ pairs in `inputs/`, execute:
 
@@ -74,7 +77,8 @@ To batch-trim all FASTQ pairs in `inputs/`, execute:
 bash scripts/run_trimmomatic_batch.sh
 ```
 
-Each sample will be processed with quality and adapter trimming. Logs and trimmed files will be stored in the `results/` directory.
+Each sample will be processed with quality and adapter trimming. 
+Logs and trimmed files will be stored in the `results/` directory.
 
 ---
 
@@ -107,12 +111,39 @@ For each sample, the pipeline generates:
 
 ---
 
+## Demo: Fault Tolerance (Continue-on-Failure)
+
+This demo shows how the pipeline isolates errors so one failing sample doesn’t stop the entire batch.
+
+```bash
+# 1. Back up the original mother_R2 FASTQ file
+cp inputs/mother_R2.fastq.gz inputs/mother_R2.fastq.gz.bak
+
+# 2. Remove all permissions from the file (simulate a 'Permission denied' error)
+chmod 000 inputs/mother_R2.fastq.gz
+
+# 3. Run the batch script — it should skip 'mother' and continue processing others
+bash scripts/run_trimmomatic_batch.sh
+
+# 4. Check if 'mother' appears in the CSV summary;
+#    if not found, print "mother skipped (as expected)"
+grep -n '^mother,' results/qc_summary.csv || echo "mother skipped (as expected)"
+
+# 5. Restore file permissions
+chmod 644 inputs/mother_R2.fastq.gz
+
+# 6. Restore the original file from the backup
+mv -f inputs/mother_R2.fastq.gz.bak inputs/mother_R2.fastq.gz
+```
+
+---
+
 ## Educational Value
 
 This mini-pipeline demonstrates:
 
 - How Trimmomatic behaves with missing or mismatched adapters
-- Interpreting QC log outputs effectively
+- How to interpret QC log outputs effectively
 - Writing Bash wrappers with integrated logging and summaries
 - Generating clean CSV summaries for downstream QC evaluation
 - Designing GitHub-safe pipelines (no large binary files committed)
@@ -132,12 +163,13 @@ It is designed for teaching practical QC debugging and can be reused in workshop
 
 ## Acknowledgements
 
-This repo is part of a structured training series maintained by [Samson Olofinsae](https://github.com/samson-olofinsae), designed for bioinformatics scientists practicing real-world debugging and pipeline development.
+This repo is part of a structured training series maintained by [Samson Olofinsae](https://github.com/samson-olofinsae), 
+designed for bioinformatics scientists practicing real-world debugging and pipeline development.
 
 ---
 
 ## Contact
 
-Have questions or suggestions? Feel free to:
-- Open an issue on GitHub
+Questions or suggestions?  
+- Open an issue on GitHub  
 - Connect via [GitHub Profile](https://github.com/samson-olofinsae)
