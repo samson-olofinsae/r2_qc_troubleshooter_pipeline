@@ -4,17 +4,17 @@ A training pipeline designed to simulate real-world quality control (QC) trouble
 
 ---
 
-##  Project Structure
+## Project Structure
 
 ```
 .
-├── inputs/                   # Raw FASTQ input files (R1/R2 for 3 samples)
-├── ref/                     # Reference FASTA file (downloaded separately)
-├── resources/               # Adapter file (TruSeq3-PE.fa)
+├── inputs/                   # Raw FASTQ input files (R1/R2 for samples)
+├── ref/                      # Reference FASTA file (downloaded separately)
+├── resources/                # Adapter file (TruSeq3-PE.fa)
 ├── results/
-│   ├── trimmed/             # Output: Trimmed and unpaired FASTQ files
-│   ├── qc_logs/             # Output: Trimmomatic logs for each sample
-│   └── qc_summary.csv       # Output: Tabular summary of trimming stats
+│   ├── trimmed/              # Output: Trimmed and unpaired FASTQ files
+│   ├── qc_logs/              # Output: Trimmomatic logs for each sample
+│   └── qc_summary.csv        # Output: Tabular summary of trimming stats
 ├── scripts/
 │   ├── run_trimmomatic_batch.sh   # Main trimming + log summariser script
 │   └── download_fasta.sh          # Fetches hg19_chr8.fa from Dropbox
@@ -23,16 +23,18 @@ A training pipeline designed to simulate real-world quality control (QC) trouble
 
 ---
 
-##  Requirements
+## Requirements
 
-- [Trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic)
-- Bash shell (`bash`)
+- [Trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic) ≥ 0.39
+- Bash ≥ 4.0
+- awk (gawk recommended)
 - cURL (`curl`)
 - Linux/Unix-based operating system
+- (Optional) Java 8+ if using `trimmomatic.jar` directly
 
 ---
 
-##  Setup Instructions
+## Setup Instructions
 
 ### 1. Clone the Repository
 
@@ -53,9 +55,20 @@ This will save `hg19_chr8.fa` in the `ref/` folder.
 
 ---
 
-##  Run the Pipeline
+## Quick Start
 
-To batch-trim all FASTQ pairs (Father, Mother, Proband), execute:
+```bash
+git clone https://github.com/samson-olofinsae/r2_qc_troubleshooter_pipeline.git
+cd r2_qc_troubleshooter_pipeline
+bash scripts/download_fasta.sh
+bash scripts/run_trimmomatic_batch.sh
+```
+
+---
+
+## Run the Pipeline
+
+To batch-trim all FASTQ pairs in `inputs/`, execute:
 
 ```bash
 bash scripts/run_trimmomatic_batch.sh
@@ -65,7 +78,7 @@ Each sample will be processed with quality and adapter trimming. Logs and trimme
 
 ---
 
-##  Output Files
+## Output Files
 
 For each sample, the pipeline generates:
 
@@ -73,15 +86,17 @@ For each sample, the pipeline generates:
 - Trimmomatic log files → `results/qc_logs/`
 - Summary CSV → `results/qc_summary.csv`
 
-### Example CSV Summary Output:
+### Example CSV Summary Output
 
-| Sample  | Input Read Pairs | Both Surviving | Forward Only  | Reverse Only  | Dropped | Percent Removed |
-|---------|------------------|----------------|---------------|---------------|---------|------------------|
-|         |                  |                |               |               |         |                  |
+| Sample  | Input Read Pairs | Both Surviving | Forward Only | Reverse Only | Dropped | Percent Removed |
+|---------|------------------|----------------|--------------|--------------|---------|-----------------|
+| father  | 2,023,471        | ...            | ...          | ...          | 92,324  | 4.56            |
+| mother  | 1,776,099        | ...            | ...          | ...          | 81,888  | 4.61            |
+| proband | 2,392,554        | ...            | ...          | ...          | 91,709  | 3.83            |
 
 ---
 
-### Column Definitions:
+### Column Definitions
 
 - **Sample**: Name of the sample (e.g., father, mother, proband)
 - **Input Read Pairs**: Total number of read pairs fed into Trimmomatic
@@ -90,9 +105,11 @@ For each sample, the pipeline generates:
 - **Dropped**: Read pairs completely discarded
 - **Percent Removed**: Proportion of total input reads discarded (%)
 
-##  Key Learning Outcomes
+---
 
-This repo helps build hands-on understanding of:
+## Educational Value
+
+This mini-pipeline demonstrates:
 
 - How Trimmomatic behaves with missing or mismatched adapters
 - Interpreting QC log outputs effectively
@@ -101,15 +118,25 @@ This repo helps build hands-on understanding of:
 - Designing GitHub-safe pipelines (no large binary files committed)
 - Enhancing reproducibility in bioinformatics scripting
 
+It is designed for teaching practical QC debugging and can be reused in workshops or lab onboarding.
+
 ---
 
-##  Acknowledgements
+## Reproducibility
+
+- Scripts are deterministic given the same inputs and adapter file
+- All outputs are timestamped and logged per sample
+- No large binaries are committed; instructions provided to fetch references
+
+---
+
+## Acknowledgements
 
 This repo is part of a structured training series maintained by [Samson Olofinsae](https://github.com/samson-olofinsae), designed for bioinformatics scientists practicing real-world debugging and pipeline development.
 
 ---
 
-##  Contact
+## Contact
 
 Have questions or suggestions? Feel free to:
 - Open an issue on GitHub
