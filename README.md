@@ -145,7 +145,7 @@ mv -f "inputs/<sample>_R2.fastq.gz.bak" "inputs/<sample>_R2.fastq.gz"
 
 ---
 
-## Demo 2 — Missing Sample Mate (Skip on Missing Pair)
+## Demo 2 - Missing Sample Mate (Skip on Missing Pair)
 
 Simulates a missing `_R2` mate file.
 
