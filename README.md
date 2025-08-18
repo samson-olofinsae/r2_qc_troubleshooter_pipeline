@@ -98,22 +98,22 @@ bash scripts/run_trimmomatic_batch.sh # trims all pairs in inputs/
 | sampleC | 2,392,554   | …              | …            | …            | 91,709  | 3.83      |
 
 **Column definitions**
-- **Sample** — Name of the sample (e.g., tumour, normal, proband)  
-- **Input Read Pairs** — Total number of read pairs fed into Trimmomatic 
-- **Both Surviving** — paired reads retained  
-- **Forward/Reverse Only** — orphan reads retained when the mate was dropped  
-- **Dropped** — read pairs discarded  
-- **% Removed** — proportion of input pairs discarded
+- **Sample** - Name of the sample (e.g., tumour, normal, proband)  
+- **Input Read Pairs** - Total number of read pairs fed into Trimmomatic 
+- **Both Surviving** - paired reads retained  
+- **Forward/Reverse Only** - orphan reads retained when the mate was dropped  
+- **Dropped** - read pairs discarded  
+- **% Removed** - proportion of input pairs discarded
 
 ---
 
 ## Educational Demos
-- **Demo 1 – Fault Tolerance**: shows how a failing sample (e.g. permission error) is skipped gracefully.  
-- **Demo 2 – Missing Mate**: simulates absent `_R2` file → sample skipped, others continue.  
+- **Demo 1 - Fault Tolerance**: shows how a failing sample (e.g. permission error) is skipped gracefully.  
+- **Demo 2 - Missing Mate**: simulates absent `_R2` file → sample skipped, others continue.  
 
 These demos illustrate *real debugging scenarios* analysts face in production pipelines.  
 
-## Demo 1 — Fault Tolerance (Continue‑on‑Failure)
+## Demo 1 - Fault Tolerance (Continue‑on‑Failure)
 
 Simulates a file permission error so **one failing sample** doesn’t stop the batch.
 
