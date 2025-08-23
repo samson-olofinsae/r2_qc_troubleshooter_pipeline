@@ -98,7 +98,7 @@ We keep the pipeline clean and generate reports **afterward** using a small help
 ### Build/refresh the MultiQC table + HTML
 ```bash
 # CSV -> MultiQC custom table (+ optional HTML)
-python scripts/make_r2_multiqc.py   --csv results/qc_summary.csv   --out results/multiqc_cc/r2_troubleshooter_mqc.tsv   --run-multiqc   --multiqc-outdir results/multiqc   --multiqc-name r2_troubleshooter_multiqc.html
+python scripts/make_r2_multiqc.py --csv results/qc_summary.csv --out results/multiqc_cc/r2_troubleshooter_mqc.tsv --run-multiqc --multiqc-outdir results/multiqc --multiqc-name r2_troubleshooter_multiqc.html
 ```
 
 - The command writes a custom-content TSV here:
