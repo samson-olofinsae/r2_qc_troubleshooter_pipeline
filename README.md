@@ -135,12 +135,12 @@ Columns in **R2 Troubleshooter — pairing & trimming summary**:
 | sampleC | 2,392,554   | …              | …            | …            | 91,709  | 3.83      |
 
 **Column definitions**
-- **Sample** — sample name (e.g., tumour, normal, proband)
-- **Input Read Pairs** — total read pairs fed into Trimmomatic
-- **Both Surviving** — paired reads retained
-- **Forward/Reverse Only** — orphan reads retained when the mate was dropped
-- **Dropped** — read pairs discarded
-- **% Removed** — proportion of input pairs discarded
+- **Sample** - sample name (e.g., tumour, normal, proband)
+- **Input Read Pairs** - total read pairs fed into Trimmomatic
+- **Both Surviving** - paired reads retained
+- **Forward/Reverse Only** - orphan reads retained when the mate was dropped
+- **Dropped** - read pairs discarded
+- **% Removed** - proportion of input pairs discarded
 
 ---
 
@@ -148,7 +148,7 @@ Columns in **R2 Troubleshooter — pairing & trimming summary**:
 
 These demos illustrate *real debugging scenarios* analysts face in production pipelines.
 
-### Demo 1 — Fault Tolerance (Continue‑on‑Failure)
+### Demo 1 - Fault Tolerance (Continue‑on‑Failure)
 
 Simulates a file permission error so **one failing sample** doesn’t stop the batch.
 
@@ -180,7 +180,7 @@ mv -f "inputs/<sample>_R2.fastq.gz.bak" "inputs/<sample>_R2.fastq.gz"
 
 ---
 
-### Demo 2 — Missing Sample Mate (Skip on Missing Pair)
+### Demo 2 - Missing Sample Mate (Skip on Missing Pair)
 
 Simulates a missing `_R2` mate file.
 
