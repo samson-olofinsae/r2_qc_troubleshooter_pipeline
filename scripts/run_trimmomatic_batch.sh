@@ -64,7 +64,7 @@ for R1 in "${R1_FILES[@]}"; do
     continue
   fi
 
-  echo " Found: $R1 and $R2"
+  echo "Found: $R1 and $R2"
 
   LOGFILE="${LOG_DIR}/${SAMPLE}_trimmomatic.log"
   R1_OUT="${OUTPUT_DIR}/${SAMPLE}_R1.trimmed.fastq.gz"
@@ -109,7 +109,7 @@ for R1 in "${R1_FILES[@]}"; do
     DROP_PCT="$(awk -v d="$DROP" -v n="$INPUT" 'BEGIN{ if(n>0){printf "%.2f", (d/n)*100}else{print "0.00"} }')"
   fi
 
-  echo "  ${SAMPLE}: ${DROP} reads dropped out of ${INPUT} total (${DROP_PCT}%)"
+  echo "${SAMPLE}: ${DROP} reads dropped out of ${INPUT} total (${DROP_PCT}%)"
 
   # Append to CSV
   printf '%q,%s,%s,%s,%s,%s,%.2f\n' \
