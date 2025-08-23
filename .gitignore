@@ -1,30 +1,48 @@
-# === Raw data and results (excluded from Git) ===
-inputs/
-results/
+# === Raw data & results ===
+# Keep the directories themselves in Git (via .gitkeep), ignore their contents.
+inputs/*
+!inputs/.gitkeep
 
-# === Logs and temporary files ===
+results/*
+!results/.gitkeep
+
+ref/*
+!ref/.gitkeep
+
+# === Logs & temp ===
 *.log
 *.tmp
 *.swp
+nohup.out
 
-# === Python cache ===
-__pycache__/
-*.pyc
-
-# === Jupyter cache ===
-.ipynb_checkpoints/
-
-# === Editor and system-specific files ===
-.DS_Store
-*.~lock.*
-Thumbs.db
-
-# Ignore reference file and index
-ref/
-
-# ignore other large files
+# === Large/binary genomics artefacts (belt & braces; results/* already ignored) ===
 *.fastq.gz
 *.bam
 *.sam
 *.vcf
 *.bcf
+
+# === MultiQC (if someone runs in repo root by mistake) ===
+multiqc_report.html
+multiqc_data/
+
+# === Python / environments ===
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+.poetry/
+.mypy_cache/
+.pytype/
+.ipynb_checkpoints/
+
+# === Editors / OS ===
+.vscode/
+.idea/
+.DS_Store
+*.~lock.*
+Thumbs.db
+
+# === JARs dropped locally (e.g., trimmomatic.jar) ===
+*.jar
