@@ -1,6 +1,6 @@
 # === Raw data & results ===
 # Keep the directories themselves in Git (via .gitkeep), ignore their contents.
-inputs/*
+!inputs/*
 !inputs/.gitkeep
 
 results/*
