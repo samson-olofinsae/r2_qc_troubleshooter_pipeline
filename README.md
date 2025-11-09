@@ -91,6 +91,45 @@ bash scripts/run_trimmomatic_batch.sh   # trims all pairs in inputs/
 
 ---
 
+# Optional: Run on Your Own FASTQs
+
+By default, this repository ships with small **demo FASTQ pairs** inside `inputs/` - ideal for training and reproducing the examples shown above.
+
+If you want to test the pipeline on your own sequencing data, simply replace or copy your files into the `inputs/` directory using this naming convention:
+
+```
+inputs/<sample_name>_R1.fastq.gz
+inputs/<sample_name>_R2.fastq.gz
+```
+
+Then re-run:
+
+```bash
+bash scripts/run_trimmomatic_batch.sh
+```
+
+### Notes
+
+- You can include multiple samples; the script automatically pairs `_R1` and `_R2` files by their basename.
+- Use the `-a` flag to point to a different adapter file if your library prep differs:
+  ```bash
+  bash scripts/run_trimmomatic_batch.sh -a /path/to/your_adapters.fa
+  ```
+- Increase threads for larger datasets:
+  ```bash
+  bash scripts/run_trimmomatic_batch.sh -t 8
+  ```
+- Outputs (`results/trimmed/`, `results/qc_logs/`, etc.) are created automatically.
+- For a clean slate before each run, use the optional **fresh mode**:
+  ```bash
+  bash scripts/run_trimmomatic_batch.sh -f
+  ```
+
+> **Important:** This project is designed for **training and educational purposes**.  
+> It is **not validated for diagnostic or clinical workflows**.  
+> Always verify real data using production-grade pipelines.
+
+
 ## NEW: MultiQC report (Option B: standalone builder)
 
 We keep the pipeline clean and generate reports **afterward** using a small helper.
