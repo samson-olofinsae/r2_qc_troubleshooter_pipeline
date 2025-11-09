@@ -1,11 +1,24 @@
 # === Raw data & results ===
-# Keep the directories themselves in Git (via .gitkeep), ignore their contents.
-!inputs/*
+# inputs/: ignore by default, keep folder and specific demo files
+inputs/*
 !inputs/.gitkeep
 
+# Allowlist tiny demo FASTQs (adjust or add filenames as needed)
+!inputs/sampleA_R1.fastq.gz
+!inputs/sampleA_R2.fastq.gz
+!inputs/sampleB_R1.fastq.gz
+!inputs/sampleB_R2.fastq.gz
+!inputs/sampleC_R1.fastq.gz
+!inputs/sampleC_R2.fastq.gz
+# (Optionally keep a demo subfolder fully tracked)
+!inputs/demo/**
+!inputs/demo
+
+# results/: ignore everything except placeholder
 results/*
 !results/.gitkeep
 
+# ref/: ignore everything except placeholder
 ref/*
 !ref/.gitkeep
 
