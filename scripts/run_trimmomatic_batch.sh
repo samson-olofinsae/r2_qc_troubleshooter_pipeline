@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# run_trimmomatic_batch.sh — Paired-end trimming with QC summary (polished)
-# Author: Samson Olofinsae (2025) 
+# run_trimmomatic_batch.sh — Paired-end trimming with QC summary (portable/robust)
+# Author: Samson Olofinsae (2025)
 
 set -euo pipefail
 IFS=$'\n\t'
@@ -46,6 +46,14 @@ if [[ ! -s "$SUMMARY_CSV" ]]; then
   echo "Sample,Input Read Pairs,Both Surviving,Forward Only,Reverse Only,Dropped,Percent Removed" > "$SUMMARY_CSV"
 fi
 
+# Helper: safe numeric extraction (never fatal)
+extract_num() {
+  local line="$1" pattern="$2" field="$3"
+  local out
+  out="$(printf '%s\n' "$line" | grep -oE "$pattern" 2>/dev/null | awk -v f="$field" '{print $f}' 2>/dev/null || true)"
+  if [[ -n "$out" ]]; then printf '%s' "$out"; else printf '0'; fi
+}
+
 # ---- Sample discovery (R1 pairs) ----
 shopt -s nullglob
 R1_FILES=("$INPUT_DIR"/*_R1.fastq.gz)
@@ -86,34 +94,40 @@ for R1 in "${R1_FILES[@]}"; do
     continue
   fi
 
-  # Parse the summary line
-  STATS_LINE="$(grep -m1 '^Input Read Pairs:' "$LOGFILE" || true)"
+  # Grab the summary line (never fatal if absent)
+  STATS_LINE="$(grep -m1 '^Input Read Pairs:' "$LOGFILE" 2>/dev/null || true)"
   if [[ -z "$STATS_LINE" ]]; then
     echo " Warning: no summary line for ${SAMPLE} – check $LOGFILE"
+    # Still record a row with zeros so downstream plots don't break
+    echo "${SAMPLE},0,0,0,0,0,0.00" >> "$SUMMARY_CSV"
     continue
   fi
 
-  # Typical format:
-  # Input Read Pairs: 2023471 Both Surviving: 193... (95.44%) Forward Only: ... Reverse Only: ... Dropped: 92324 (4.56%)
-  INPUT="$(awk '{print $4}' <<<"$STATS_LINE")"
-  BOTH="$(awk '{for(i=1;i<=NF;i++) if($i=="Both") print $(i+2)}' <<<"$STATS_LINE" | tr -d '()%')"
-  FWD="$(awk '{for(i=1;i<=NF;i++) if($i=="Forward") print $(i+3)}' <<<"$STATS_LINE" | tr -d '()%')"
-  REV="$(awk '{for(i=1;i<=NF;i++) if($i=="Reverse") print $(i+3)}' <<<"$STATS_LINE" | tr -d '()%')"
-  DROP="$(awk '{for(i=1;i<=NF;i++) if($i=="Dropped:") print $(i+1)}' <<<"$STATS_LINE" | tr -d ',')"
+  # Temporarily relax pipefail while parsing to avoid aborts on misses
+  set +o pipefail
 
-  # Compute percent removed from counts if percent missing
-  if DROP_PCT_RAW="$(awk '{for(i=1;i<=NF;i++) if($i=="Dropped:") print $(i+2)}' <<<"$STATS_LINE")"; then
-    DROP_PCT="$(tr -d '()%,' <<<"$DROP_PCT_RAW" || true)"
-  fi
-  if [[ -z "${DROP_PCT:-}" ]]; then
-    DROP_PCT="$(awk -v d="$DROP" -v n="$INPUT" 'BEGIN{ if(n>0){printf "%.2f", (d/n)*100}else{print "0.00"} }')"
+  INPUT="$(extract_num "$STATS_LINE" 'Input Read Pairs: [0-9]+' 4)"
+  BOTH="$( extract_num "$STATS_LINE" 'Both Surviving: [0-9]+'   3)"
+  FWD="$(  extract_num "$STATS_LINE" 'Forward Only: [0-9]+'     3)"
+  REV="$(  extract_num "$STATS_LINE" 'Reverse Only: [0-9]+'     3)"
+  DROP="$( extract_num "$STATS_LINE" 'Dropped: [0-9]+'          2)"
+
+  DROP_PCT="$(printf '%s\n' "$STATS_LINE" \
+    | grep -oE 'Dropped: [0-9]+ \([0-9.]+%\)' 2>/dev/null \
+    | grep -oE '[0-9.]+%' 2>/dev/null \
+    | tr -d '%' || true)"
+  set -o pipefail
+
+  # Fallback if percent wasn't present
+  if [[ -z "$DROP_PCT" ]]; then
+    DROP_PCT="$(awk -v d="${DROP:-0}" -v n="${INPUT:-0}" 'BEGIN{ if(n>0){printf "%.2f", (d/n)*100}else{print "0.00"} }')"
   fi
 
   echo "${SAMPLE}: ${DROP} reads dropped out of ${INPUT} total (${DROP_PCT}%)"
 
   # Append to CSV
-  printf '%q,%s,%s,%s,%s,%s,%.2f\n' \
-    "$SAMPLE" "$INPUT" "$BOTH" "$FWD" "$REV" "$DROP" "$DROP_PCT" | sed 's/\\//g' >> "$SUMMARY_CSV"
+  SAMPLE_CSV="${SAMPLE//,/}"
+  echo "${SAMPLE_CSV},${INPUT},${BOTH},${FWD},${REV},${DROP},${DROP_PCT}" >> "$SUMMARY_CSV"
 done
 
 echo "Trimming batch completed: $(date)"
