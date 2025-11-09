@@ -3,17 +3,6 @@
 inputs/*
 !inputs/.gitkeep
 
-# Allowlist tiny demo FASTQs (adjust or add filenames as needed)
-!inputs/sampleA_R1.fastq.gz
-!inputs/sampleA_R2.fastq.gz
-!inputs/sampleB_R1.fastq.gz
-!inputs/sampleB_R2.fastq.gz
-!inputs/sampleC_R1.fastq.gz
-!inputs/sampleC_R2.fastq.gz
-# (Optionally keep a demo subfolder fully tracked)
-!inputs/demo/**
-!inputs/demo
-
 # results/: ignore everything except placeholder
 results/*
 !results/.gitkeep
@@ -28,7 +17,7 @@ ref/*
 *.swp
 nohup.out
 
-# === Large/binary genomics artefacts (belt & braces; results/* already ignored) ===
+# === Large/binary genomics artefacts (belt & braces) ===
 *.fastq.gz
 *.bam
 *.sam
@@ -59,3 +48,13 @@ Thumbs.db
 
 # === JARs dropped locally (e.g., trimmomatic.jar) ===
 *.jar
+
+# === FINAL allowlist overrides (demo FASTQs must stay tracked) ===
+!inputs/sampleA_R1.fastq.gz
+!inputs/sampleA_R2.fastq.gz
+!inputs/sampleB_R1.fastq.gz
+!inputs/sampleB_R2.fastq.gz
+!inputs/sampleC_R1.fastq.gz
+!inputs/sampleC_R2.fastq.gz
+!inputs/demo/**
+!inputs/demo
