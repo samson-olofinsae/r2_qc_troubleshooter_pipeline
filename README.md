@@ -112,15 +112,15 @@ multiqc results -o results/multiqc -n r2_troubleshooter_multiqc.html -f
 ```
 
 ### What the MultiQC table shows (per sample)
-Columns in **R2 Troubleshooter — pairing & trimming summary**:
+Columns in **R2 Troubleshooter - pairing & trimming summary**:
 
-- **has_R1 / has_R2** — whether both mates were found (expected: `true/true`; a missing mate would be flagged `SKIP`)
-- **input_pairs** — total read pairs given to Trimmomatic
-- **both_surviving** — pairs kept after trimming
-- **forward_only / reverse_only** — orphan reads retained when the mate was dropped
-- **dropped** — read pairs discarded
-- **removed_pct** — `(dropped / input_pairs) × 100`
-- **status / note** — run outcome summary (`RUN/ok`; you’ll see `SKIP` or `ERROR` if you choose to add log-aware rows later)
+- **has_R1 / has_R2** - whether both mates were found (expected: `true/true`; a missing mate would be flagged `SKIP`)
+- **input_pairs** - total read pairs given to Trimmomatic
+- **both_surviving** - pairs kept after trimming
+- **forward_only / reverse_only** - orphan reads retained when the mate was dropped
+- **dropped** - read pairs discarded
+- **removed_pct** - `(dropped / input_pairs) × 100`
+- **status / note** - run outcome summary (`RUN/ok`; you’ll see `SKIP` or `ERROR` if you choose to add log-aware rows later)
 
 > Tip: MultiQC’s **General Statistics** (top panel) is numeric-only. Text fields (`status`, `note`) won’t display there; they are visible in this custom section.
 
